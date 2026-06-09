@@ -14,7 +14,8 @@ Bu proje, iş analisti mülakat hazırlığı için hazırlanmış tek sayfa bir
 
 ## Kullanım
 
-1. `index.html` dosyasını tarayıcıda açın.
+1. `index.html` dosyasını tarayıcıda açın veya uygulamayı GitHub Pages üzerinden ziyaret edin:
+   - https://salihakyuz.github.io/quizApp/
 2. Başlangıç ekranında quiz modunu seçin.
 3. `☰ Sorular` butonuna tıklayarak sidebar'ı açıp kapatın.
 4. Soruları cevaplayın ve sonuç ekranında `Ana ekrana dön` butonuna basın.
