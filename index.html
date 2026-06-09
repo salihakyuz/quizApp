@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İş Analisti Mülakat Hazırlık</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #191c27;
+    --surface2: #1f2335;
+    --border: #2a2e42;
+    --accent: #6366f1;
+    --accent-soft: rgba(99,102,241,0.12);
+    --accent2: #22d3ee;
+    --success: #10b981;
+    --danger: #f43f5e;
+    --warn: #f59e0b;
+    --text: #e2e4f0;
+    --muted: #8b8fa8;
+    --easy: #10b981;
+    --medium: #f59e0b;
+    --hard: #f43f5e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo span { color: var(--accent); }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .progress-pill {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  .score-pill {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid var(--success);
+    color: var(--success);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  /* LAYOUT */
+  .app { display: flex; min-height: calc(100vh - 61px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    position: sticky;
+    top: 61px;
+    height: calc(100vh - 61px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+  .cat-group { margin-bottom: 20px; }
+  .cat-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 8px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cat-label.temel { color: var(--easy); background: rgba(16,185,129,0.08); }
+  .cat-label.orta { color: var(--warn); background: rgba(245,158,11,0.08); }
+  .cat-label.ileri { color: var(--danger); background: rgba(244,63,94,0.08); }
+  .q-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: var(--muted);
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .q-nav-item:hover { background: var(--surface2); color: var(--text); }
+  .q-nav-item.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .q-nav-item.answered-correct { color: var(--success); }
+  .q-nav-item.answered-wrong { color: var(--danger); }
+  .q-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .q-nav-item.active .q-num { background: var(--accent); color: white; }
+  .q-nav-item.answered-correct .q-num { background: rgba(16,185,129,0.2); color: var(--success); }
+  .q-nav-item.answered-wrong .q-num { background: rgba(244,63,94,0.2); color: var(--danger); }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 32px 40px;
+    max-width: 820px;
+  }
+
+  /* START SCREEN */
+  .start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    gap: 24px;
+  }
+  .start-screen h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .start-screen h1 span { color: var(--accent); }
+  .start-screen p { color: var(--muted); max-width: 480px; font-size: 1rem; }
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+  }
+  .stat-card .n { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+  .stat-card .l { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .start-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .start-btn:hover { background: #4f52d3; transform: translateY(-1px); }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .q-index {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .difficulty-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .difficulty-badge.Temel { background: rgba(16,185,129,0.12); color: var(--easy); border: 1px solid rgba(16,185,129,0.3); }
+  .difficulty-badge.Orta { background: rgba(245,158,11,0.12); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
+  .difficulty-badge.İleri { background: rgba(244,63,94,0.12); color: var(--danger); border: 1px solid rgba(244,63,94,0.3); }
+  .cat-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid rgba(99,102,241,0.3);
+  }
+  .type-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: rgba(34,211,238,0.08);
+    color: var(--accent2);
+    border: 1px solid rgba(34,211,238,0.25);
+  }
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.65;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  .case-box {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .case-box strong { color: var(--text); }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    transition: all 0.18s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.selected-correct { border-color: var(--success); background: rgba(16,185,129,0.08); color: var(--success); }
+  .option-btn.selected-wrong { border-color: var(--danger); background: rgba(244,63,94,0.08); color: var(--danger); }
+  .option-btn.reveal-correct { border-color: var(--success); background: rgba(16,185,129,0.06); color: var(--success); }
+  .option-letter {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: all 0.18s;
+  }
+  .option-btn.selected-correct .option-letter { background: var(--success); color: white; }
+  .option-btn.selected-wrong .option-letter { background: var(--danger); color: white; }
+  .option-btn.reveal-correct .option-letter { background: var(--success); color: white; }
+  .option-btn:hover:not(:disabled) .option-letter { background: var(--accent); color: white; }
+
+  /* FEEDBACK */
+  .feedback-box {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    display: none;
+  }
+  .feedback-box.correct { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color: var(--success); }
+  .feedback-box.wrong { background: rgba(244,63,94,0.08); border: 1px solid rgba(244,63,94,0.25); color: #f87171; }
+  .feedback-box .fb-label { font-weight: 700; margin-bottom: 4px; display: block; }
+  .feedback-box .fb-exp { color: var(--text); opacity: 0.85; }
+
+  /* NAVIGATION */
+  .q-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .nav-btn.primary:hover { background: #4f52d3; }
+
+  /* RESULTS */
+  .results-screen {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+  }
+  .results-screen h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .big-score {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin: 20px 0;
+  }
+  .score-label { color: var(--muted); font-size: 0.9rem; }
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+  }
+  .result-cell {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .result-cell .rc-n {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .result-cell .rc-l { font-size: 0.75rem; color: var(--muted); }
+  .verdict {
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 16px 0;
+  }
+  .verdict.great { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--success); }
+  .verdict.good { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--warn); }
+  .verdict.low { background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.3); color: var(--danger); }
+  .restart-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { background: #4f52d3; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 20px 16px; }
+    .header { padding: 14px 16px; }
+    .question-card { padding: 20px; }
+    .result-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">İş Analisti <span>Quiz</span></div>
+  <div class="header-meta">
+    <div class="progress-pill" id="headerProgress">Başlamadı</div>
+    <div class="score-pill" id="headerScore" style="display:none">Puan: 0</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">Sorular</div>
+    <div id="sidebarContent"></div>
+  </div>
+  <div class="main" id="mainContent"></div>
+</div>
+
+<script>
+const questions = [
+  // ─── BÖLÜM 1: TEMEL IA KAVRAMLARI ───────────────────────────
+  {
+    id: 1, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "İş analistinin temel rolü hangisidir?",
+    opts: ["Yazılım geliştirmek","İş ihtiyaçlarını ve paydaş beklentilerini analiz ederek çözümler önermek","Proje bütçesini yönetmek","Sunucu altyapısını kurmak"],
+    ans: 1, exp: "İş analisti; paydaşların ihtiyaçlarını anlar, süreçleri modeller ve uygulanabilir çözümler önerir. Teknik geliştirme veya altyapı yönetimi birincil sorumluluk değildir."
+  },
+  {
+    id: 2, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "BABOK (Business Analysis Body of Knowledge) hangi kurumun yayınladığı standarttır?",
+    opts: ["PMI","IIBA","ISO","ITIL"],
+    ans: 1, exp: "BABOK, IIBA (International Institute of Business Analysis) tarafından yayınlanmakta olup iş analizi disiplininin temel kılavuzu olarak kabul edilmektedir."
+  },
+  {
+    id: 3, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "Bir iş gereksinimi (business requirement) ile sistem gereksinimi (system requirement) arasındaki temel fark nedir?",
+    opts: ["İş gereksinimi teknik, sistem gereksinimi iş odaklıdır","İş gereksinimi 'ne isteniyor'u, sistem gereksinimi 'sistemin ne yapması gerektiğini' tanımlar","İkisi aynı anlama gelir","Sistem gereksinimleri yalnızca yazılım ekibine aittir"],
+    ans: 1, exp: "İş gereksinimleri organizasyonun ihtiyaç ve hedeflerini; sistem gereksinimleri bu ihtiyaçları karşılamak için sistemin sergilemesi gereken davranışları tanımlar."
+  },
+  {
+    id: 4, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "Paydaş (stakeholder) kimdir?",
+    opts: ["Yalnızca son kullanıcılar","Yalnızca sponsor ve yöneticiler","Bir değişimden etkilenen veya değişimi etkileyen herhangi bir kişi ya da grup","Yalnızca geliştirme ekibi"],
+    ans: 2, exp: "Paydaş; müşteriler, son kullanıcılar, sponsorlar, düzenleyici kurumlar, tedarikçiler ve geliştiriciler dahil olmak üzere projeden etkilenen ya da projeyi etkileyen herkesi kapsar."
+  },
+  {
+    id: 5, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "Kapsam kayması (scope creep) ne anlama gelir?",
+    opts: ["Projenin erken tamamlanması","Onaysız ve kontrolsüz kapsam genişlemesi","Proje bütçesinin azalması","Test süreçlerinin uzaması"],
+    ans: 1, exp: "Scope creep, resmi değişiklik yönetimi süreci izlenmeksizin proje kapsamının giderek genişlemesidir. Bu durum bütçe aşımına, gecikmelere ve kalite sorunlarına yol açar."
+  },
+  {
+    id: 6, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "Fonksiyonel olmayan gereksinim (non-functional requirement) örneği hangisidir?",
+    opts: ["Kullanıcı sisteme giriş yapabilmeli","Sipariş oluşturabilmeli","Sistem %99,9 erişilebilirlik sunmalı","Rapor oluşturabilmeli"],
+    ans: 2, exp: "Fonksiyonel olmayan gereksinimler; performans, güvenlik, ölçeklenebilirlik ve erişilebilirlik gibi sistemin 'nasıl' davranacağını tanımlar. Giriş ve sipariş gibi örnekler fonksiyonel gereksinimlerdir."
+  },
+  {
+    id: 7, diff: "Temel", cat: "Temel Kavramlar", type: "Bilgi",
+    q: "BPM (Business Process Management) ne anlama gelir?",
+    opts: ["İş süreçlerini modelleme, izleme ve iyileştirme disiplini","Yazılım proje yönetimi metodolojisi","Veri tabanı tasarım yöntemi","Müşteri ilişkileri yönetimi"],
+    ans: 0, exp: "BPM; iş süreçlerini sistematik olarak tanımlama, modelleme, uygulama, izleme ve sürekli iyileştirme pratiğidir."
+  },
+  {
+    id: 8, diff: "Temel", cat: "Gereksinim Toplama", type: "Bilgi",
+    q: "Hangi gereksinim toplama tekniği, kullanıcıların gerçek ortamda nasıl çalıştığını gözlemleyerek bilgi edinmeyi sağlar?",
+    opts: ["Anket","Odak grubu","Gözlem (Observation/Job Shadowing)","Beyin fırtınası"],
+    ans: 2, exp: "Gözlem (ethnographic study / job shadowing) tekniğinde analist, kullanıcıları gerçek iş ortamında izler. Bu sayede söylenenlerle değil yapılanlarla ilgili veri toplanır."
+  },
+  {
+    id: 9, diff: "Temel", cat: "Gereksinim Toplama", type: "Bilgi",
+    q: "Bireysel kullanıcılardan derinlemesine bilgi almak için en uygun teknik hangisidir?",
+    opts: ["Kitlesel anket","Birebir mülakat","Odak grubu","Belge analizi"],
+    ans: 1, exp: "Birebir mülakatlar; tek bir kişiyle derinlemesine bilgi, motivasyon ve bağlam elde etmek için idealdir. Grup dinamiklerinden etkilenmez."
+  },
+  {
+    id: 10, diff: "Temel", cat: "Gereksinim Toplama", type: "Bilgi",
+    q: "SMART gereksinim kriterleri hangisidir?",
+    opts: ["Specific, Measurable, Achievable, Relevant, Time-bound","Simple, Modern, Agile, Robust, Testable","Structured, Managed, Accurate, Reliable, Traceable","Scalable, Modular, Adaptable, Reusable, Testable"],
+    ans: 0, exp: "SMART; Specific (özgül), Measurable (ölçülebilir), Achievable (ulaşılabilir), Relevant (ilgili), Time-bound (zamana bağlı) anlamına gelir. İyi bir gereksinimin bu özellikleri taşıması gerekir."
+  },
+
+  // ─── BÖLÜM 2: ORTA SEVİYE ─────────────────────────────────
+  {
+    id: 11, diff: "Orta", cat: "Süreç Modelleme", type: "Teknik",
+    q: "BPMN diyagramında havuz (pool) ile şerit (lane) arasındaki fark nedir?",
+    opts: ["Pool ve lane aynı şeydir","Pool ayrı bir organizasyonu/katılımcıyı, lane aynı organizasyon içindeki rolleri temsil eder","Lane dış kuruluşu, pool iç rolü temsil eder","Pool yalnızca otomatik süreçlerde kullanılır"],
+    ans: 1, exp: "BPMN'de Pool; bağımsız bir katılımcıyı (şirket, sistem), Lane ise bu katılımcı içindeki farklı rolleri veya departmanları temsil eder."
+  },
+  {
+    id: 12, diff: "Orta", cat: "Süreç Modelleme", type: "Teknik",
+    q: "UML Use Case diyagramında 'extend' ilişkisi ne anlama gelir?",
+    opts: ["Bir use case başka bir use case'i her zaman kullanır","Bir use case koşullu olarak başka bir use case'i genişletir","İki use case tamamen bağımsızdır","Aktör ve use case ilişkisini gösterir"],
+    ans: 1, exp: "«extend» ilişkisi; temel use case'e koşullu/opsiyonel davranış eklenmesini ifade eder. «include» ise her çalışmada zorunlu olarak dahil edilen adımları gösterir."
+  },
+  {
+    id: 13, diff: "Orta", cat: "Süreç Modelleme", type: "Teknik",
+    q: "Aşağıdakilerden hangisi AS-IS süreç analizi için doğrudur?",
+    opts: ["Gelecekteki ideal süreci tanımlar","Mevcut durumu belgeler, sorunları ve darboğazları tespit eder","Yalnızca yeni projelere uygulanır","Teknoloji seçimini belirler"],
+    ans: 1, exp: "AS-IS analizi mevcut durumu olduğu gibi belgeleyerek israf, darboğaz ve verimsizlikleri ortaya çıkarır. TO-BE analizi ise iyileştirilmiş hedef durumu modellemektedir."
+  },
+  {
+    id: 14, diff: "Orta", cat: "Gereksinim Yönetimi", type: "Teknik",
+    q: "İz sürme matrisi (traceability matrix) ne için kullanılır?",
+    opts: ["Proje bütçesini takip etmek","Gereksinimlerin test senaryoları ve geliştirme görevleriyle ilişkisini izlemek","Proje takvimini oluşturmak","Kullanıcı arayüzü tasarımını yapmak"],
+    ans: 1, exp: "İz sürme matrisi; her gereksinimin tasarım, geliştirme ve test süreçleriyle bağlantısını gösterir. Bu sayede bir gereksinimin karşılanıp karşılanmadığı ve değişikliklerin etkisi izlenebilir."
+  },
+  {
+    id: 15, diff: "Orta", cat: "Gereksinim Yönetimi", type: "Yorum",
+    q: "Bir paydaş 'sistem daha hızlı olmalı' diyor. İş analisti olarak ilk adımınız ne olmalıdır?",
+    opts: ["Hemen teknik ekibe iletmek","'Daha hızlı' ifadesini ölçülebilir hale getirmek için gerçek beklentileri netleştirmek","Mevcut sistem mimarisini yeniden tasarlamak","Bu gereksinimi reddetmek"],
+    ans: 1, exp: "Belirsiz ifadeler ölçülebilir kriterlere dönüştürülmelidir. Örneğin 'sayfa yükleme 2 saniyenin altında olmalı' gibi somut bir metriğe çevrilerek gerçek beklenti anlaşılır."
+  },
+  {
+    id: 16, diff: "Orta", cat: "Analiz Teknikleri", type: "Teknik",
+    q: "SWOT analizi hangi unsurları kapsar?",
+    opts: ["Strateji, İş akışı, Operasyon, Teknoloji","Güçlü yönler, Zayıf yönler, Fırsatlar, Tehditler","Kapsam, İş, Çıktı, Zamanlama","Süreç, Problem, Çözüm, Test"],
+    ans: 1, exp: "SWOT; Strengths (güçlü yönler), Weaknesses (zayıf yönler), Opportunities (fırsatlar), Threats (tehditler) analizini kapsar. İç ve dış faktörleri birlikte değerlendirir."
+  },
+  {
+    id: 17, diff: "Orta", cat: "Analiz Teknikleri", type: "Teknik",
+    q: "Kök neden analizi (Root Cause Analysis) için sıkça kullanılan '5 Neden' tekniğinde temel yaklaşım nedir?",
+    opts: ["Problemi 5 farklı kategoride analiz etmek","Probleme neden olan asıl sebebi bulmak için art arda 'Neden?' sorusu sormak","5 paydaştan görüş almak","Problemi 5 adımda çözmek"],
+    ans: 1, exp: "5 Neden tekniğinde bir problem ifadesine art arda 'neden?' sorusu sorulur. Her yanıt bir sonraki sorunun girdisi olur; böylece yüzeysel semptomlardan gerçek kök nedene ulaşılır."
+  },
+  {
+    id: 18, diff: "Orta", cat: "Agile / Scrum", type: "Teknik",
+    q: "Kullanıcı hikayesi (user story) hangi formatı izler?",
+    opts: ["Sistem [eylem] yapmalı [koşul] altında","[Rol] olarak [hedef] istiyorum, [fayda] elde etmek için","[Proje] kapsamında [özellik] [tarih]'e kadar teslim edilmeli","Test: [durum] iken [eylem] yapılırsa [sonuç] beklenir"],
+    ans: 1, exp: "Kullanıcı hikayesi formatı: 'Bir [kullanıcı türü] olarak, [hedef] yapmak istiyorum; böylece [fayda] elde edeceğim.' Bu format, kullanıcı değerini ve bağlamı net biçimde ifade eder."
+  },
+  {
+    id: 19, diff: "Orta", cat: "Agile / Scrum", type: "Teknik",
+    q: "Product Backlog ile Sprint Backlog arasındaki fark nedir?",
+    opts: ["İkisi aynı şeydir","Product Backlog tüm özellik listesi, Sprint Backlog belirli bir sprint için seçilen işler","Sprint Backlog teknik görevleri içermez","Product Backlog yalnızca bug kayıtlarını içerir"],
+    ans: 1, exp: "Product Backlog, ürüne ait tüm özellik, hata ve görevlerin önceliklendirilmiş listesidir. Sprint Backlog ise o sprint boyunca tamamlanması planlanan görevlerin seçilmiş alt kümesidir."
+  },
+  {
+    id: 20, diff: "Orta", cat: "Agile / Scrum", type: "Yorum",
+    case: "Bir sprint planlamasında ekip 13 story point'lik bir iş seçti. Sprint sonunda 8 story point tamamlandı, 5 point bir sonraki sprint'e devredildi.",
+    q: "Bu durumda sprint velocity'yi nasıl hesaplarsınız ve bir sonraki sprint planlamasına yansıması nasıl olmalıdır?",
+    opts: ["Velocity = 13, gelecekte 13 SP alınabilir","Velocity = 8, gelecekte bu sprint'e dayanarak daha gerçekçi planlama yapılmalı","Velocity = 5, devredilen işler üzerinden hesaplanır","Velocity hesaplanamaz"],
+    ans: 1, exp: "Velocity yalnızca tamamlanan story point'ler üzerinden hesaplanır (=8). Devredilen işler bir sonraki sprint'in başlangıç kapasitesini etkileyeceğinden planlama buna göre ayarlanmalıdır."
+  },
+  {
+    id: 21, diff: "Orta", cat: "Veri Analizi", type: "Teknik",
+    q: "KPI (Key Performance Indicator) ile metrik arasındaki fark nedir?",
+    opts: ["KPI ve metrik aynı kavramdır","Her KPI bir metriktir; ancak her metrik KPI değildir — KPI stratejik hedeflerle doğrudan ilişkilendirilir","Her metrik KPI'dır","KPI yalnızca finansal verilere uygulanır"],
+    ans: 1, exp: "Metrik, ölçülebilir herhangi bir değerdir. KPI ise kritik iş hedeflerine bağlı, başarıyı değerlendiren temel göstergedir. Tüm KPI'lar metrik olmakla birlikte her metrik KPI değildir."
+  },
+  {
+    id: 22, diff: "Orta", cat: "Veri Analizi", type: "Teknik",
+    q: "Bir tabloda 'NULL' değer ne anlama gelir?",
+    opts: ["Sıfır (0) değeri","Boş string","Bilinmeyen veya mevcut olmayan veri","Hata kodu"],
+    ans: 2, exp: "NULL; bir değerin bilinmediğini, mevcut olmadığını veya uygulanamaz olduğunu gösterir. Sıfır ya da boş string ile karıştırılmamalıdır; NULL her ikisinden de farklı anlam taşır."
+  },
+  {
+    id: 23, diff: "Orta", cat: "Paydaş Yönetimi", type: "Yorum",
+    case: "Proje sponsoru hızlı teslimden yanayken, son kullanıcılar kapsamlı bir test süreci isteyor. Bu iki grup arasında çelişen beklentiler var.",
+    q: "İş analisti olarak bu çatışmayı nasıl yönetirsiniz?",
+    opts: ["Yalnızca sponsorun görüşünü esas alırsınız","Yalnızca kullanıcıların görüşünü esas alırsınız","Her iki tarafın önceliklerini anlayarak değiş tokuşları (trade-off) görünür kılar ve bilinçli karar alınmasını sağlarsınız","Kararı teknik ekibe bırakırsınız"],
+    ans: 2, exp: "Çatışan beklentilerde İA'nın rolü; tarafların gerçek önceliklerini anlamak, seçeneklerin sonuçlarını (örn. hızlı teslim → yüksek risk) sayısal verilerle ortaya koymak ve paydaşların bilinçli karar almasını sağlamaktır."
+  },
+  {
+    id: 24, diff: "Orta", cat: "Süreç İyileştirme", type: "Teknik",
+    q: "Lean metodolojisinde 'Muda' ne anlama gelir?",
+    opts: ["Sürekli iyileştirme","İsraf — değer katmayan her türlü aktivite","Kalite güvencesi","Standartlaştırma"],
+    ans: 1, exp: "Muda (waste/israf); bekleme, aşırı üretim, gereksiz taşıma, fazla stok gibi müşteri değeri yaratmayan ve kaynakları tüketen aktiviteleri ifade eder. Lean'in temel hedefi mudayı elimine etmektir."
+  },
+  {
+    id: 25, diff: "Orta", cat: "Süreç İyileştirme", type: "Teknik",
+    q: "Six Sigma metodolojisinde DMAIC döngüsünün adımları nelerdir?",
+    opts: ["Define, Measure, Analyze, Improve, Control","Design, Model, Assess, Implement, Close","Define, Map, Automate, Integrate, Check","Discover, Monitor, Adapt, Iterate, Certify"],
+    ans: 0, exp: "DMAIC: Define (tanımla), Measure (ölç), Analyze (analiz et), Improve (iyileştir), Control (kontrol et). Bu döngü mevcut süreçlerin veri odaklı iyileştirilmesi için kullanılır."
+  },
+
+  // ─── BÖLÜM 3: İLERI SEVİYE / CASE ─────────────────────────
+  {
+    id: 26, diff: "İleri", cat: "Case: Fintech", type: "Case",
+    case: "Bir dijital banka, mobil uygulamasında kredi başvuru sürecini yeniden tasarlamak istiyor. Mevcut süreçte başvuru ortalama 12 dakika sürüyor ve %35 terk oranı var. Hedef: terk oranını %15'e düşürmek.",
+    q: "Bu analiz için hangi yaklaşım en doğrudur?",
+    opts: ["Doğrudan yeni ekranları tasarlamak","Terk noktalarını funnel analizi ile belirlemek, kullanıcı mülakatları ile nedenleri anlamak, TO-BE sürecini tasarlamak, A/B test ile doğrulamak","Rakip uygulamaları kopyalamak","Sadece başvuru formundaki alanları azaltmak"],
+    ans: 1, exp: "Doğru yaklaşım: (1) Funnel/drop-off analizi ile terk noktasını tespit et, (2) nitel araştırma ile nedenleri anla, (3) çözüm tasarla, (4) A/B test veya pilot ile doğrula. Direkt tasarım, gerçek sorunu atlama riskini taşır."
+  },
+  {
+    id: 27, diff: "İleri", cat: "Case: E-Ticaret", type: "Case",
+    case: "Bir e-ticaret platformu, son 3 ayda müşteri şikayetlerinde %40 artış bildiriyor. Şikayetler çeşitli konularda: geç teslimat, yanlış ürün, iade zorlukları.",
+    q: "Kök neden analizinde hangi araçları öncelikli kullanırsınız?",
+    opts: ["Sadece müşteri anketleri","Pareto analizi (hangi şikayet kategorisi en fazla?), süreç haritalama (sorunlu adımı bul), 5 Neden (kök nedeni tespit et)","Yalnızca çağrı merkezi kayıtlarını incelemek","Rakip analizine odaklanmak"],
+    ans: 1, exp: "Pareto analizi ile en kritik şikayet kategorisi belirlenir. Süreç haritalama ile ilgili süreçte sorunlu adım tespit edilir. 5 Neden ile kök nedenine ulaşılır. Bu üçlü yaklaşım, gerçek sorunu sistematik biçimde ortaya koyar."
+  },
+  {
+    id: 28, diff: "İleri", cat: "Case: Kurumsal", type: "Case",
+    case: "Bir şirket, ERP sistemini değiştirmeyi değerlendiriyor. 3 farklı satıcı teklif sundu. Karar kriterleri: maliyet, entegrasyon kolaylığı, kullanıcı deneyimi ve destek kalitesi.",
+    q: "Satıcıları değerlendirmek için hangi teknik kullanılmalıdır?",
+    opts: ["En ucuz teklifi seçmek","Ağırlıklı Karar Matrisi (Weighted Decision Matrix) — kriterlere ağırlık vererek puanlama","Yalnızca teknik ekibin görüşüne güvenmek","Coin atarak karar vermek"],
+    ans: 1, exp: "Ağırlıklı Karar Matrisi; kriterlerin göreli önemini yansıtır. Her seçenek her kriterde puanlanır, ağırlıklı toplam hesaplanır. Bu sayede sübjektif tercihler yerine yapılandırılmış, şeffaf bir karar süreci yürütülür."
+  },
+  {
+    id: 29, diff: "İleri", cat: "Değişim Yönetimi", type: "Yorum",
+    q: "ADKAR modeli neyi açıklar?",
+    opts: ["Yazılım geliştirme sürecini","Bireysel değişim yönetimi aşamalarını: Awareness, Desire, Knowledge, Ability, Reinforcement","Proje planlama metodolojisini","Veri analizi çerçevesini"],
+    ans: 1, exp: "ADKAR: Awareness (farkındalık), Desire (istek), Knowledge (bilgi), Ability (yetenek), Reinforcement (pekiştirme). Prosci'nin geliştirdiği bu model, başarılı değişim için bireylerin hangi aşamaları geçmesi gerektiğini açıklar."
+  },
+  {
+    id: 30, diff: "İleri", cat: "Veri / SQL", type: "Teknik",
+    case: "Bir sipariş tablosunda (orders) order_id, customer_id, amount ve created_at kolonları var. Son 30 günde 1000 TL üzeri sipariş veren müşteri sayısını bulmak istiyorsunuz.",
+    q: "Doğru SQL sorgusu hangisidir?",
+    opts: [
+      "SELECT COUNT(*) FROM orders WHERE amount > 1000",
+      "SELECT COUNT(DISTINCT customer_id) FROM orders WHERE amount > 1000 AND created_at >= NOW() - INTERVAL '30 days'",
+      "SELECT SUM(amount) FROM orders WHERE customer_id > 1000",
+      "SELECT * FROM orders WHERE created_at = '30 days'"
+    ],
+    ans: 1, exp: "COUNT(DISTINCT customer_id) her müşteriyi yalnızca bir kez sayar. WHERE koşulu hem miktar (>1000) hem de tarih (son 30 gün) filtrelerini birleştirir. DISTINCT olmadan aynı müşteri birden fazla sayılabilir."
+  },
+  {
+    id: 31, diff: "İleri", cat: "Veri / SQL", type: "Teknik",
+    case: "Müşteri tablosu (customers) ve sipariş tablosu (orders) mevcut. Hiç sipariş vermemiş müşterileri listelemek istiyorsunuz.",
+    q: "Hangi SQL yaklaşımı doğrudur?",
+    opts: [
+      "SELECT * FROM customers WHERE orders IS NULL",
+      "SELECT c.* FROM customers c LEFT JOIN orders o ON c.id = o.customer_id WHERE o.customer_id IS NULL",
+      "SELECT * FROM customers INNER JOIN orders ON customers.id = orders.customer_id",
+      "SELECT * FROM customers WHERE amount = 0"
+    ],
+    ans: 1, exp: "LEFT JOIN ile tüm müşteriler tutulur. Sipariş tablosundan eşleşme olmayanlar NULL döner. WHERE o.customer_id IS NULL filtresi hiç sipariş vermemiş müşterileri seçer. INNER JOIN eşleşmeyenleri eleyeceğinden yanlış sonuç verir."
+  },
+  {
+    id: 32, diff: "İleri", cat: "Case: Süreç", type: "Case",
+    case: "Satın alma onay süreci 7 adımdan oluşuyor ve ortalama 14 gün sürüyor. Analiz sonucu: 3 adım gerçek değer katmıyor, 2 onay aşaması paralel yapılabilir.",
+    q: "TO-BE süreç tasarımında hangi yaklaşım benimsenmeli?",
+    opts: [
+      "Değer katmayan 3 adımı tamamen kaldır, paralel adımları eş zamanlı yürüt; değişiklik öncesi risk analizi yaparak kontrol noktalarını koru",
+      "Mevcut süreci değiştirme, sadece daha hızlı yürüt",
+      "Tüm adımları otomatize et",
+      "Adım sayısını ikiye indir ama hangilerini kaldıracağını belirleme"
+    ],
+    ans: 0, exp: "İyi süreç iyileştirme: değer katmayan adımları eleme + paralel çalışma ile zaman kazanma + riski kontrol etme. Kör otomasyondan önce süreç tasarımının doğrulanması gerekir."
+  },
+  {
+    id: 33, diff: "İleri", cat: "Gereksinim Yönetimi", type: "Yorum",
+    q: "MoSCoW önceliklendirme tekniğinde 'Should Have' ne anlama gelir?",
+    opts: [
+      "Mutlaka olması gereken, olmadan çözüm çalışmaz",
+      "Önemli ama bu sürümde yoksa geçici çözümler mevcut",
+      "Güzel olur ama öncelikli değil",
+      "Gelecek sürümler için planlanan"
+    ],
+    ans: 1, exp: "MoSCoW: Must (zorunlu), Should (önemli ama geçici çözümü var), Could (güzel olur), Won't (bu sürümde yok). 'Should Have' öğeleri pratikte genellikle MVP kapsamına girmeli ya da açıkça bilinçli olarak dışarıda bırakılmalıdır."
+  },
+  {
+    id: 34, diff: "İleri", cat: "Case: Fintech", type: "Case",
+    case: "Bir ödeme şirketi, dolandırıcılık tespiti için yeni bir ML modeli devreye almak istiyor. Model %92 doğrulukla çalışıyor ancak %8 hatalı pozitif (false positive) oranı var — yani meşru işlemler reddediliyor.",
+    q: "İş analisti olarak bu trade-off'u nasıl değerlendirirsiniz?",
+    opts: [
+      "Doğruluk %92 olduğu için model kullanıma alınmalı",
+      "%8 false positive'in müşteri deneyimine, gelir kaybına ve operasyonel maliyete etkisini nicelleştirmek; eşik değerini (threshold) ayarlama veya istisna akışı tasarlama seçeneklerini değerlendirmek",
+      "Modeli tamamen reddetmek",
+      "Bu kararı yalnızca veri bilimine bırakmak"
+    ],
+    ans: 1, exp: "Genel doğruluk yanıltıcı olabilir. İA; false positive'in somut etkisini (kaç işlem, kaç müşteri, ne kadar gelir) hesaplamalı, threshold optimizasyonu veya ek doğrulama akışı gibi çözümler önermelidir."
+  },
+  {
+    id: 35, diff: "İleri", cat: "Süreç Modelleme", type: "Teknik",
+    q: "Event Storming tekniği ne için kullanılır?",
+    opts: [
+      "Sunucu altyapısını planlamak",
+      "Domain uzmanları ve geliştiricilerin birlikte iş alanı olaylarını (domain events) keşfetmesi ve yazılım mimarisini şekillendirmesi",
+      "Kullanıcı arayüzü prototipleri oluşturmak",
+      "Proje bütçesini hesaplamak"
+    ],
+    ans: 1, exp: "Event Storming; Alberto Brandolini tarafından geliştirilen, renkli yapışkan notlar kullanılan atölye formatıdır. Domain olayları, komutlar, kümeler ve sınır bağlamları ortaklaşa keşfedilerek DDD tasarımına zemin hazırlanır."
+  },
+  {
+    id: 36, diff: "İleri", cat: "Proje Yönetimi", type: "Yorum",
+    q: "Waterfall ile Agile metodoloji arasındaki temel fark hangisinde en iyi ifade edilir?",
+    opts: [
+      "Waterfall daha ucuz, Agile daha pahalıdır",
+      "Waterfall doğrusal-öngörülebilir teslim ve sabit kapsam; Agile iteratif-uyarlanabilir teslim ve değişen kapsama yanıt verme",
+      "Agile hiç belgeleme gerektirmez",
+      "Waterfall yalnızca küçük projeler için uygundur"
+    ],
+    ans: 1, exp: "Waterfall sabit kapsam, sıralı fazlar ve tek seferlik teslim üzerine kuruludur. Agile ise değişen gereksinimlere kısa iterasyonlarla yanıt verir ve müşteri geri bildirimini döngüye dahil eder."
+  },
+  {
+    id: 37, diff: "İleri", cat: "Case: Analitik", type: "Case",
+    case: "Bir SaaS ürününde aylık churn oranı %6. Veri analizi: churn eden kullanıcıların %70'i ilk 3 ayda destek talebi açmış. Aktif kullanan kullanıcıların sadece %15'i bu sorunu yaşıyor.",
+    q: "Bu verilere dayanarak iş analistinin önerisi ne olmalıdır?",
+    opts: [
+      "Fiyat indirimi yapmak",
+      "Onboarding sürecini güçlendirmek — ilk 3 ay proaktif destek, eğitim içerikleri ve müşteri başarısı (customer success) programı tasarlamak",
+      "Ürünü tamamen yeniden tasarlamak",
+      "Daha fazla pazarlama yapmak"
+    ],
+    ans: 1, exp: "Veriler, churn ile erken dönem destek talebinin yüksek korelasyonunu gösteriyor. Kök neden büyük olasılıkla benimseme (adoption) sorunudur. Onboarding iyileştirmesi ve proaktif müşteri başarısı programı en yüksek etkiyi sağlayacak müdahaledir."
+  },
+  {
+    id: 38, diff: "İleri", cat: "Dokümantasyon", type: "Teknik",
+    q: "BRS (Business Requirements Specification) ile SRS (Software Requirements Specification) arasındaki fark nedir?",
+    opts: [
+      "BRS teknik detayları, SRS iş hedeflerini içerir",
+      "BRS iş perspektifinden ne isteniyor ve neden sorularını yanıtlar; SRS sistem perspektifinden sistemin ne yapması gerektiğini tanımlar",
+      "İkisi aynı dokümandır",
+      "BRS yalnızca Agile projelerde kullanılır"
+    ],
+    ans: 1, exp: "BRS; iş hedefleri, paydaş gereksinimleri ve başarı ölçütleri içerir. SRS; fonksiyonel/non-fonksiyonel gereksinimler, sistem davranışları ve kısıtları teknik dilde tanımlar. BRS'den SRS türetilir."
+  },
+  {
+    id: 39, diff: "İleri", cat: "Veri / Analiz", type: "Teknik",
+    q: "Cohort analizi ne için kullanılır?",
+    opts: [
+      "Veritabanı performansını ölçmek",
+      "Benzer özelliklere sahip kullanıcı gruplarının zaman içindeki davranışlarını karşılaştırmalı olarak izlemek",
+      "Yazılım sürümlerini yönetmek",
+      "Proje risklerini kategorize etmek"
+    ],
+    ans: 1, exp: "Cohort analizi; aynı dönemde edinilen veya belirli bir özelliği paylaşan kullanıcı gruplarının (cohort) ilerleyen dönemlerde nasıl davrandığını (retention, churn, spend) karşılaştırmaya yarar."
+  },
+  {
+    id: 40, diff: "İleri", cat: "İletişim & Sunum", type: "Yorum",
+    case: "Üst yönetim için hazırladığınız analiz raporu 40 sayfa. C-suite toplantısı 20 dakika.",
+    q: "En etkili sunum yaklaşımı hangisidir?",
+    opts: [
+      "Tüm 40 sayfayı hızlı okumak",
+      "Pyramid Principle: sonucu ve önerileri önce, destekleyici kanıtları arkadan sun; detaylar ek bölümde hazır olsun",
+      "Yalnızca grafikleri göstermek",
+      "Teknik detaylara odaklanmak"
+    ],
+    ans: 1, exp: "Üst yönetimde zaman kısıtlıdır. Barbara Minto'nun Pyramid Principle'ı: önce ana mesaj/öneri, sonra destekleyen argümanlar, en altta kanıtlar. Bu yapı kararı hızlandırır ve merak uyandırır."
+  },
+
+  // ─── BÖLÜM 4: UZMAN SEVİYE ────────────────────────────────
+  {
+    id: 41, diff: "İleri", cat: "Risk Analizi", type: "Teknik",
+    q: "Risk matrisi (probability × impact) kullanılarak bir riskin önceliği belirlenirken dikkate alınması gereken üçüncü boyut nedir?",
+    opts: ["Riskin renk kodu","Risk sahibi (owner) ve yanıt stratejisi (kaçın / azalt / transfer et / kabul et)","Riskin adı","Projenin başlangıç tarihi"],
+    ans: 1, exp: "Olasılık ve etki riskin büyüklüğünü ölçer. Risk yanıt stratejisi (avoid, mitigate, transfer, accept) ise bu riskle ne yapılacağını belirler. Risk sahibi atamak da hesap verebilirlik için kritiktir."
+  },
+  {
+    id: 42, diff: "İleri", cat: "Mimari Anlayış", type: "Yorum",
+    q: "Mikroservis mimarisi benimsemeden önce bir iş analistinin sorması gereken kritik soru hangisidir?",
+    opts: [
+      "Hangi programlama dili kullanılacak?",
+      "Organizasyon bağımsız dağıtım, ekip özerkliği ve operasyonel olgunluk sağlayabilecek mi? (Conway Yasası etkisi)",
+      "Sunucu maliyeti ne kadar olacak?",
+      "Kaç geliştirici gerekiyor?"
+    ],
+    ans: 1, exp: "Conway Yasası: sistemlerin mimarisi, onları yaratan organizasyonun iletişim yapısını yansıtır. Mikroservisler; bağımsız ekipler, CI/CD olgunluğu ve DevOps kapasitesi gerektirmektedir. Organizasyonel hazırlık teknik karardan önce gelir."
+  },
+  {
+    id: 43, diff: "İleri", cat: "Case: Strateji", type: "Case",
+    case: "Bir perakende şirketi, müşterilere kişiselleştirilmiş öneri motoru kurmak istiyor. Bütçe sınırlı, veri kalitesi düşük, zaman baskısı var.",
+    q: "Bu kısıtlar altında hangi yaklaşım en akılcıdır?",
+    opts: [
+      "Tam ML sistemi geliştirmek",
+      "MVP'yi basit kural tabanlı önerilerle başlatmak (yüksek satış × kategori eşleşmesi), paralelde veri kalitesini artırmak, ilerleyen fazlarda ML eklemek",
+      "Projeyi rafa kaldırmak",
+      "Yalnızca rakipleri taklit etmek"
+    ],
+    ans: 1, exp: "Kısıtlı bütçe ve düşük veri kalitesinde ML'e doğrudan yatırım yüksek risk taşır. Kural tabanlı MVP hızla değer üretir, kullanıcı davranışı hakkında veri toplar ve ML için zemin hazırlar — bu 'crawl-walk-run' yaklaşımıdır."
+  },
+  {
+    id: 44, diff: "İleri", cat: "Veri Yönetimi", type: "Teknik",
+    q: "Veri sözlüğü (data dictionary) ne içerir?",
+    opts: [
+      "Şirketin SQL sorgularının listesi",
+      "Her veri alanının adı, tipi, açıklaması, kaynağı, sahipliği ve iş kurallarını tanımlayan meta veri deposu",
+      "Proje zaman çizelgesi",
+      "Kullanıcı kimlik bilgileri"
+    ],
+    ans: 1, exp: "Veri sözlüğü; alan adı, veri tipi, uzunluk, açıklama, kaynak sistem, iş kuralları ve sahiplik gibi meta verileri bir arada tutar. Veri entegrasyonu ve analiz çalışmalarında ortak anlam sağlar."
+  },
+  {
+    id: 45, diff: "İleri", cat: "Case: Ürün", type: "Case",
+    case: "Mobil uygulamanızın A/B testinde: Versiyon A (mevcut) — dönüşüm %4,2, Versiyon B (yeni) — dönüşüm %4,8. Test 14 gün, her grupta 10.000 kullanıcı.",
+    q: "Bu sonucu nasıl yorumlarsınız?",
+    opts: [
+      "B kesinlikle daha iyi, hemen deploy edin",
+      "İstatistiksel anlamlılığı (p-value, confidence interval) kontrol etmek, segment bazlı analiz yapmak ve B'nin tüm metrikler üzerindeki etkisini değerlendirmek gerekir",
+      "Fark küçük olduğu için A'da kalın",
+      "Test süresi çok uzun, sonuçlar geçersiz"
+    ],
+    ans: 1, exp: "Ham dönüşüm oranları yeterli değildir. İstatistiksel anlamlılık (tipik olarak p<0.05) olmadan bu fark şansa bağlı olabilir. Ayrıca segment analizi, ikincil metrikler (süre, hata oranı) ve pratik anlamlılık değerlendirilmelidir."
+  },
+  {
+    id: 46, diff: "İleri", cat: "Süreç Modelleme", type: "Teknik",
+    q: "Value Stream Mapping'de 'takt time' ne anlama gelir?",
+    opts: [
+      "Bir ürünün üretim süresi",
+      "Müşteri talebini karşılamak için birim başına ayrılması gereken ritim süresi (çalışma süresi / talep)",
+      "Üretim hattındaki toplam bekleme süresi",
+      "Kalite kontrol süresi"
+    ],
+    ans: 1, exp: "Takt time = Mevcut çalışma süresi / Müşteri talebi. Üretim ritminin müşteri talebine uyum sağlaması gereken hedef süreyi gösterir. Takt time'ın üzerinde cycle time darboğaz, altında ise fazla kapasite işaretidir."
+  },
+  {
+    id: 47, diff: "İleri", cat: "Case: Dijital Dönüşüm", type: "Case",
+    case: "Geleneksel bir sigorta şirketi, hasar yönetim sürecini dijitalleştirmek istiyor. Çalışanların %60'ı 10+ yıllık deneyimli, mevcut süreç kağıt tabanlı. Proje 18 ay.",
+    q: "Kritik başarı faktörü olarak önce hangisi odaklanılmalıdır?",
+    opts: [
+      "En gelişmiş teknolojiyi seçmek",
+      "Değişim yönetimi: deneyimli çalışanları sürece dahil etmek, bilgilerini sisteme işlemek, direnci proaktif ele almak ve pilot uygulama ile güven inşa etmek",
+      "Süreci tamamen dış kaynak vermek",
+      "Önce tüm sistemi kurup sonra eğitim vermek"
+    ],
+    ans: 1, exp: "Dijital dönüşüm başarısızlıklarının %70'i teknoloji değil insan/değişim yönetiminden kaynaklanır. Deneyimli çalışanların sürece ortak edilmesi hem bilgilerinin korunmasını hem de benimsemeyi sağlar."
+  },
+  {
+    id: 48, diff: "İleri", cat: "Veri / Analiz", type: "Teknik",
+    q: "Funnel analizi (dönüşüm hunisi) hangi soruyu yanıtlar?",
+    opts: [
+      "Hangi ürün en çok satıyor?",
+      "Kullanıcılar belirli bir akışta (kayıt, satın alma, onboarding) hangi adımda ne oranda terk ediyor?",
+      "Sunucu yük dağılımı nasıl?",
+      "Hangi pazarlama kanalı en fazla trafik getiriyor?"
+    ],
+    ans: 1, exp: "Funnel analizi; çok adımlı bir süreçte her adımdan bir sonrakine geçiş oranlarını ölçer. En yüksek terk noktasını (drop-off) tespit ederek iyileştirme odağını belirler."
+  },
+  {
+    id: 49, diff: "İleri", cat: "Gereksinim Yönetimi", type: "Yorum",
+    case: "Üç farklı paydaş grubunun birbiriyle çelişen gereksinimleri var: müşteri hizmetleri daha basit arayüz, satış ekibi daha fazla veri görünürlüğü, IT güvenlik uyumluluğu istiyor.",
+    q: "Bu çatışmayı çözmek için hangi yöntem en etkilidir?",
+    opts: [
+      "En güçlü paydaşın istediğini yapmak",
+      "Gereksinimlerin iş hedefleriyle bağlantısını kurmak, önceliklendirme atölyesi düzenlemek, değiş tokuşları görünür kılarak uzlaşı sağlamak",
+      "Her grubun istediğini eklemek",
+      "Çözümü ertelemek"
+    ],
+    ans: 1, exp: "Çelişen gereksinimler önce iş değeri ve stratejik hedeflerle ilişkilendirilmelidir. Atölye ortamında değiş tokuşlar görünür kılındığında paydaşlar bilinçli uzlaşı üretebilir. Otoriteye dayalı karar çoğu zaman çatışmayı gizler."
+  },
+  {
+    id: 50, diff: "İleri", cat: "Case: Fintech", type: "Case",
+    case: "Bir neobank, müşteri edinimi için referans programı tasarlıyor. Hedef: ilk 6 ayda 50.000 yeni müşteri. Varsayımlar: referans dönüşüm %20, aktif kullanıcıların %15'i referans yapacak. Mevcut aktif kullanıcı: 80.000.",
+    q: "Bu varsayımlarla hedefe ulaşılabilir mi?",
+    opts: [
+      "Evet, 50.000 kolaylıkla aşılır",
+      "80.000 × %15 = 12.000 referans; × %20 dönüşüm = 2.400 yeni müşteri — hedef çok uzak, varsayımları ve kanalları gözden geçirmek gerekir",
+      "Hesaplama yapılmadan söylenemez",
+      "Hayır, referans programları hiç işe yaramaz"
+    ],
+    ans: 1, exp: "Sayısal analiz: 80.000 × 0.15 = 12.000 referans veren → 12.000 × 0.20 = 2.400 yeni müşteri. Bu 50.000'in çok altında. İA, varsayımları test etmeli, ek kanallar (ücretli, organik) eklenmeli veya hedef revize edilmelidir."
+  },
+  {
+    id: 51, diff: "İleri", cat: "Proje Yönetimi", type: "Yorum",
+    q: "Proje üçgeni (scope-time-cost) bağlamında bir paydaş teslim tarihini öne alırken kapsamı korumak istiyorsa iş analisti ne önermelidir?",
+    opts: [
+      "Hem tarihi hem kapsamı değiştirme",
+      "Üçgen dengesinin bozulacağını göstermek: zamanı azaltmak için ya kapsamı küçültmek ya maliyeti (kaynak) artırmak ya da kaliteden ödün vermek gerekir; paydaşın bilinçli seçim yapmasını sağlamak",
+      "Her ikisini de kabul et ve ekibe söyle",
+      "Kararı proje yöneticisine bırakmak"
+    ],
+    ans: 1, exp: "Proje üçgeni (Triple Constraint): kapsam, zaman ve maliyet/kaynak birbirine bağlıdır. Birini sıkıştırmak diğerlerini etkiler. İA'nın rolü bu trade-off'ları somut ve anlaşılır biçimde ortaya koyarak paydaşın gerçekçi karar almasını sağlamaktır."
+  },
+  {
+    id: 52, diff: "İleri", cat: "Veri / Analiz", type: "Teknik",
+    q: "Veri kalitesi boyutları arasında 'completeness' (tamlık) ne anlama gelir?",
+    opts: [
+      "Verinin doğru formatta olması",
+      "Beklenen veri miktarının mevcut olması — eksik kayıt veya NULL oranının düşük olması",
+      "Verinin güncel olması",
+      "Farklı sistemler arasındaki tutarlılık"
+    ],
+    ans: 1, exp: "Veri kalitesi boyutları: Accuracy (doğruluk), Completeness (tamlık), Consistency (tutarlılık), Timeliness (güncellik), Uniqueness (benzersizlik). Completeness, beklenen tüm kayıt/alanların mevcut olup olmadığını ölçer."
+  },
+  {
+    id: 53, diff: "İleri", cat: "Mimari Anlayış", type: "Yorum",
+    q: "REST API ile GraphQL arasındaki temel farkı iş analisti perspektifinden nasıl açıklarsınız?",
+    opts: [
+      "GraphQL daha yeni olduğu için her zaman daha iyidir",
+      "REST sabit endpoint'ler ve veri yapıları sunarken GraphQL istemcinin tam olarak ihtiyaç duyduğu veriyi sorgulamasına imkân tanır — karmaşık UI gereksinimlerinde over/under-fetching sorununu çözer",
+      "İkisi tamamen aynıdır",
+      "REST yalnızca web, GraphQL yalnızca mobil için kullanılır"
+    ],
+    ans: 1, exp: "İş perspektifinden: REST çok sayıda farklı endpoint ile net bir kaynak modeli sunar. GraphQL ise esnek sorgulama sayesinde frontend gereksinimlerine daha iyi uyum sağlar, ancak önbelleğe alma ve karmaşıklık yönetimi ek beceri gerektirir."
+  },
+  {
+    id: 54, diff: "İleri", cat: "Case: Ürün", type: "Case",
+    case: "Bir SaaS platformu, yeni bir özellik için iki opsiyon değerlendiriyor. Opsiyon A: 3 ay geliştirme, 200 yeni müşteri beklentisi, yıllık 500K ₺ gelir. Opsiyon B: 1 ay geliştirme, 80 yeni müşteri beklentisi, yıllık 180K ₺ gelir.",
+    q: "Yalnızca gelir odaklı değerlendirmede A mı yoksa B mi önceliklendirilmeli?",
+    opts: [
+      "A, çünkü daha fazla gelir",
+      "B, çünkü ROI (gelir/geliştirme süresi oranı) daha yüksek: 180K / 1 ay vs 500K / 3 ay; erken nakit akışı ve fırsat maliyeti avantajı var",
+      "İkisi eşit",
+      "Bu kararı veri olmadan vermek mümkün değil"
+    ],
+    ans: 1, exp: "B'nin aylık gelir getirisi: 180K/1ay = 180K/ay. A'nın: 500K/3ay = 167K/ay. Ayrıca B 2 ay daha erken devreye girer ve bu sürede ek gelir ve müşteri geri bildirimi üretir. Fırsat maliyeti ve zaman değeri analizde kritiktir."
+  },
+  {
+    id: 55, diff: "İleri", cat: "Agile / Scrum", type: "Yorum",
+    q: "Definition of Done (DoD) ile Acceptance Criteria (Kabul Kriterleri) arasındaki fark nedir?",
+    opts: [
+      "İkisi aynı şeydir",
+      "DoD, ekibin tüm işler için geçerli kalite standartlarını tanımlar; Acceptance Criteria bir kullanıcı hikayesinin özel koşullarını belirtir",
+      "DoD müşteriye aittir, Acceptance Criteria geliştirme ekibine",
+      "DoD yalnızca bug'lar için geçerlidir"
+    ],
+    ans: 1, exp: "DoD ekip düzeyinde: 'her hikaye tamamlandığında neler yapılmış olmalı?' (test, code review, deploy). Acceptance Criteria hikaye düzeyinde: 'bu özellik ne zaman başarılı sayılır?' Her ikisi de kaliteyi güvence altına almak için birbirini tamamlar."
+  },
+  {
+    id: 56, diff: "İleri", cat: "İletişim & Sunum", type: "Yorum",
+    q: "Aktif dinleme tekniklerinden 'paraphrase' (yeniden ifade etme) mülakatta neden kritiktir?",
+    opts: [
+      "Zaman doldurmak için",
+      "Paydaşın söylediklerini kendi kelimelerinizle tekrar etmek hem anlamayı doğrular hem de kişinin kendini duyulmuş hissettirerek daha derin bilgi paylaşmasını teşvik eder",
+      "Daha akıllı görünmek için",
+      "Tekrar söylemesini sağlamak için"
+    ],
+    ans: 1, exp: "Paraphrase, aktif dinlemenin kritik aracıdır: yanlış anlamayı erken yakalar, güven inşa eder ve görüşülen kişinin bilgiyi netleştirmesini ya da genişletmesini sağlar. Gereksinim toplama mülakatlarında vazgeçilmezdir."
+  },
+  {
+    id: 57, diff: "İleri", cat: "Case: Strateji", type: "Case",
+    case: "Porter'ın 5 Güç modeli analizi: Tedarikçi gücü yüksek, alıcı gücü orta, yeni giriş tehdidi düşük, ikame tehdidi yüksek, rekabet yoğun.",
+    q: "Bu analiz bir şirket için ne önermektedir?",
+    opts: [
+      "Hemen yeni piyasaya girin",
+      "Tedarik zinciri güçlendirme (dikey entegrasyon/alternatif tedarikçi) ve farklılaştırma stratejisi ile ikame tehdidine karşı değer oluşturma kritik odak noktaları",
+      "Fiyat indirimi ile rekabet et",
+      "İkame ürün geliştir"
+    ],
+    ans: 1, exp: "Yüksek tedarikçi gücü ve ikame tehdidi, şirketi sıkıştırmaktadır. Strateji: (1) tedarikçi bağımlılığını azalt (2) müşteri değeri yaratarak ikame karşısında farklılaş. Düşük giriş tehdidi mevcut pozisyonu korumak için avantaj sunar."
+  },
+  {
+    id: 58, diff: "İleri", cat: "Veri Yönetimi", type: "Teknik",
+    q: "GDPR ve KVKK bağlamında 'veri minimizasyonu' ilkesi ne anlama gelir?",
+    opts: [
+      "Olabildiğince fazla veri toplamak",
+      "Yalnızca belirli ve meşru bir amaç için gerçekten gerekli olan verileri toplamak",
+      "Veriyi çok küçük boyutlarda saklamak",
+      "Yalnızca şifrelenmiş veri kullanmak"
+    ],
+    ans: 1, exp: "Veri minimizasyonu (data minimisation): işleme amacı açısından yeterli, ilgili ve gereklilikle sınırlı veri toplanması. İA, sistem tasarımında 'bu veriye gerçekten ihtiyaç var mı?' sorusunu erken sorarak uyumluluk riskini azaltır."
+  },
+  {
+    id: 59, diff: "İleri", cat: "Case: Operasyonel", type: "Case",
+    case: "Bir çağrı merkezi: ortalama çözüm süresi 8 dk, ilk aramada çözüm oranı (FCR) %62, müşteri memnuniyet skoru (CSAT) 3,4/5. Sektör ortalaması: FCR %75, CSAT 4,1/5.",
+    q: "İyileştirme önceliklendirmesinde hangi analiz çerçevesini kullanırsınız?",
+    opts: [
+      "Yalnızca ortalama çözüm süresine odaklanmak",
+      "Benchmark gap analizi (FCR ve CSAT'taki açığı nicelleştir), FCR düşüklüğünün nedenlerini analiz et (bilgi tabanı, yetki, süreç), etki x çaba matrisi ile müdahaleleri önceliklendir",
+      "Çağrı merkezi personelini değiştirmek",
+      "Teknoloji yatırımı yapmak"
+    ],
+    ans: 1, exp: "FCR'deki %13 açık, CSAT'taki 0.7 puanlık farkın muhtemelen temel nedenidir. Kök neden analizi (neden ilk aramada çözülemiyor?), ardından etki x çaba matrisi ile en yüksek ROI'lu müdahaleyi belirlemek en yapılandırılmış yaklaşımdır."
+  },
+  {
+    id: 60, diff: "İleri", cat: "Case: Ürün Stratejisi", type: "Case",
+    case: "Startup, aynı anda 4 farklı özelliği geliştirmek istiyor. Ekip kapasitesi: 2 geliştirici. A: yüksek değer/yüksek çaba, B: yüksek değer/düşük çaba, C: düşük değer/düşük çaba, D: düşük değer/yüksek çaba.",
+    q: "İş analisti olarak önceliklendirme sıralamanız ne olmalıdır?",
+    opts: [
+      "A → B → C → D",
+      "B → A → C → D: önce quick win (yüksek değer/düşük çaba), sonra stratejik (yüksek değer/yüksek çaba), C opsiyonel, D hiç yapılmamalı",
+      "D → C → B → A",
+      "Tümünü aynı anda başlatmak"
+    ],
+    ans: 1, exp: "Value/Effort matrisi: Yüksek değer + düşük çaba (B) = 'quick win', önce yap. Yüksek değer + yüksek çaba (A) = 'major project', sıradaki. Düşük değer + düşük çaba (C) = kaynak varsa. Düşük değer + yüksek çaba (D) = yapmayın. Bu çerçeve kaynakları en yüksek ROI'ya yönlendirir."
+  }
+];
+
+// ── APP STATE ──
+let state = {
+  phase: 'start',
+  current: 0,
+  answers: {},
+  score: 0
+};
+
+function getCatGroups() {
+  const groups = { Temel: [], Orta: [], İleri: [] };
+  questions.forEach((q, i) => {
+    groups[q.diff].push({ q, i });
+  });
+  return groups;
+}
+
+function renderSidebar() {
+  if (state.phase === 'start') { document.getElementById('sidebarContent').innerHTML = ''; return; }
+  const groups = getCatGroups();
+  const diffLabels = { Temel: 'temel', Orta: 'orta', İleri: 'ileri' };
+  let html = '';
+  Object.entries(groups).forEach(([diff, items]) => {
+    if (!items.length) return;
+    html += `<div class="cat-group">
+      <div class="cat-label ${diffLabels[diff]}">${diff === 'Temel' ? '🟢' : diff === 'Orta' ? '🟡' : '🔴'} ${diff}</div>`;
+    items.forEach(({ q, i }) => {
+      let cls = 'q-nav-item';
+      if (i === state.current) cls += ' active';
+      else if (state.answers[q.id] !== undefined) {
+        cls += state.answers[q.id].correct ? ' answered-correct' : ' answered-wrong';
+      }
+      html += `<div class="${cls}" onclick="goTo(${i})">
+        <div class="q-num">${q.id}</div>
+        <span style="font-size:0.74rem;line-height:1.3">${q.cat}</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('sidebarContent').innerHTML = html;
+}
+
+function updateHeader() {
+  const total = questions.length;
+  const answered = Object.keys(state.answers).length;
+  const prog = document.getElementById('headerProgress');
+  const sc = document.getElementById('headerScore');
+  if (state.phase === 'start') { prog.textContent = 'Başlamadı'; sc.style.display = 'none'; return; }
+  if (state.phase === 'results') { prog.textContent = 'Tamamlandı'; sc.style.display = 'inline'; sc.textContent = `Puan: ${state.score}/${total}`; return; }
+  prog.textContent = `${answered}/${total} cevaplandı`;
+  sc.style.display = 'inline';
+  sc.textContent = `Doğru: ${state.score}`;
+}
+
+function render() {
+  renderSidebar();
+  updateHeader();
+  const main = document.getElementById('mainContent');
+
+  if (state.phase === 'start') {
+    const cats = [...new Set(questions.map(q => q.cat))].length;
+    main.innerHTML = `
+      <div class="start-screen">
+        <div>
+          <h1>İş Analisti<br><span>Mülakat Hazırlık</span></h1>
+          <p style="margin-top:12px">Kolaydan zora 60 soru. Teknik, case ve yorum sorularıyla gerçek mülakat deneyimi.</p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="n">60</div><div class="l">Soru</div></div>
+          <div class="stat-card"><div class="n">${cats}</div><div class="l">Kategori</div></div>
+          <div class="stat-card"><div class="n">3</div><div class="l">Zorluk Seviyesi</div></div>
+          <div class="stat-card"><div class="n">3</div><div class="l">Soru Tipi</div></div>
+        </div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;font-size:0.8rem;color:var(--muted)">
+          <span style="color:var(--easy)">🟢 Temel (1–10)</span>
+          <span style="color:var(--warn)">🟡 Orta (11–40)</span>
+          <span style="color:var(--danger)">🔴 İleri (41–60)</span>
+        </div>
+        <button class="start-btn" onclick="startQuiz()">Sınava Başla →</button>
+      </div>`;
+    return;
+  }
+
+  if (state.phase === 'results') {
+    renderResults(main);
+    return;
+  }
+
+  renderQuestion(main);
+}
+
+function renderQuestion(main) {
+  const q = questions[state.current];
+  const answered = state.answers[q.id];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let caseHtml = '';
+  if (q.case) {
+    caseHtml = `<div class="case-box"><strong>Senaryo:</strong> ${q.case}</div>`;
+  }
+
+  let optionsHtml = q.opts.map((opt, i) => {
+    let cls = 'option-btn';
+    if (answered !== undefined) {
+      if (i === q.ans) cls += ' reveal-correct';
+      else if (i === answered.selected) cls += ' selected-wrong';
+    }
+    return `<button class="${cls}" ${answered !== undefined ? 'disabled' : ''} onclick="selectAnswer(${i})">
+      <div class="option-letter">${letters[i]}</div>
+      <span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  let feedbackHtml = '';
+  if (answered !== undefined) {
+    const fb = answered.correct
+      ? `<span class="fb-label">✅ Doğru!</span><span class="fb-exp">${q.exp}</span>`
+      : `<span class="fb-label">❌ Yanlış. Doğru cevap: ${letters[q.ans]} — ${q.opts[q.ans]}</span><span class="fb-exp">${q.exp}</span>`;
+    feedbackHtml = `<div class="feedback-box ${answered.correct ? 'correct' : 'wrong'}" style="display:block">${fb}</div>`;
+  }
+
+  const isLast = state.current === questions.length - 1;
+
+  main.innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-index">Soru ${state.current + 1} / ${questions.length}</span>
+        <span class="difficulty-badge ${q.diff}">${q.diff}</span>
+        <span class="cat-badge">${q.cat}</span>
+        <span class="type-badge">${q.type}</span>
+      </div>
+      ${caseHtml}
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optionsHtml}</div>
+      ${feedbackHtml}
+    </div>
+    <div class="q-nav">
+      <button class="nav-btn" onclick="navigate(-1)" ${state.current === 0 ? 'disabled' : ''}>← Önceki</button>
+      <span style="font-size:0.8rem;color:var(--muted)">${Object.keys(state.answers).length} / ${questions.length} cevaplandı</span>
+      ${isLast && answered !== undefined
+        ? `<button class="nav-btn primary" onclick="showResults()">Sonuçları Gör →</button>`
+        : `<button class="nav-btn" onclick="navigate(1)" ${answered === undefined && !isLast ? 'disabled' : isLast ? 'disabled' : ''}>Sonraki →</button>`
+      }
+    </div>`;
+}
+
+function selectAnswer(idx) {
+  const q = questions[state.current];
+  if (state.answers[q.id] !== undefined) return;
+  const correct = idx === q.ans;
+  state.answers[q.id] = { selected: idx, correct };
+  if (correct) state.score++;
+  render();
+}
+
+function navigate(dir) {
+  state.current = Math.max(0, Math.min(questions.length - 1, state.current + dir));
+  render();
+}
+
+function goTo(i) {
+  state.current = i;
+  render();
+}
+
+function startQuiz() {
+  state.phase = 'quiz';
+  render();
+}
+
+function showResults() {
+  state.phase = 'results';
+  render();
+}
+
+function renderResults(main) {
+  const total = questions.length;
+  const pct = Math.round((state.score / total) * 100);
+  let verdict, vclass;
+  if (pct >= 80) { verdict = '🏆 Mükemmel! Mülakat için hazırsınız.'; vclass = 'great'; }
+  else if (pct >= 60) { verdict = '📈 İyi gidiyorsunuz! Zayıf olduğunuz kategorileri tekrar edin.'; vclass = 'good'; }
+  else { verdict = '📚 Temel konuları pekiştirin ve tekrar deneyin.'; vclass = 'low'; }
+
+  const byDiff = { Temel: { c: 0, t: 0 }, Orta: { c: 0, t: 0 }, İleri: { c: 0, t: 0 } };
+  questions.forEach(q => {
+    byDiff[q.diff].t++;
+    if (state.answers[q.id]?.correct) byDiff[q.diff].c++;
+  });
+
+  main.innerHTML = `
+    <div class="results-screen">
+      <h2>Sonuçların Hazır!</h2>
+      <div class="big-score">${pct}%</div>
+      <div class="score-label">${state.score} / ${total} doğru</div>
+      <div class="result-grid">
+        <div class="result-cell"><div class="rc-n" style="color:var(--easy)">${byDiff['Temel'].c}/${byDiff['Temel'].t}</div><div class="rc-l">🟢 Temel</div></div>
+        <div class="result-cell"><div class="rc-n" style="color:var(--warn)">${byDiff['Orta'].c}/${byDiff['Orta'].t}</div><div class="rc-l">🟡 Orta</div></div>
+        <div class="result-cell"><div class="rc-n" style="color:var(--danger)">${byDiff['İleri'].c}/${byDiff['İleri'].t}</div><div class="rc-l">🔴 İleri</div></div>
+      </div>
+      <div class="verdict ${vclass}">${verdict}</div>
+      <button class="restart-btn" onclick="restart()">Tekrar Dene</button>
+    </div>`;
+}
+
+function restart() {
+  state = { phase: 'start', current: 0, answers: {}, score: 0 };
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
