@@ -64,6 +64,45 @@
     font-size: 0.82rem;
     color: var(--muted);
   }
+  .toggle-sidebar-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-toggle-handle {
+    position: fixed;
+    top: 116px;
+    left: 0;
+    min-width: 120px;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 0 16px 16px 0;
+    background: var(--accent);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    z-index: 130;
+    box-shadow: 2px 6px 24px rgba(0, 0, 0, 0.22);
+    transition: left 0.2s ease, background 0.2s ease;
+  }
+  .sidebar-toggle-handle:hover { background: #4f52d3; }
+  .sidebar-toggle-handle.open { left: 280px; }
+  .sidebar-toggle-handle.closed { left: 0; }
+  .toggle-sidebar-btn:hover {
+    background: rgba(99,102,241,0.1);
+  }
   .progress-pill {
     background: var(--accent-soft);
     border: 1px solid var(--accent);
@@ -84,7 +123,7 @@
   }
 
   /* LAYOUT */
-  .app { display: flex; min-height: calc(100vh - 61px); }
+  .app { min-height: calc(100vh - 61px); position: relative; padding: 24px 20px 40px; }
 
   /* SIDEBAR */
   .sidebar {
@@ -92,11 +131,25 @@
     background: var(--surface);
     border-right: 1px solid var(--border);
     padding: 24px 16px;
-    position: sticky;
+    position: fixed;
+    left: 0;
     top: 61px;
-    height: calc(100vh - 61px);
+    bottom: 0;
     overflow-y: auto;
-    flex-shrink: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+    transform: translateX(0);
+    z-index: 120;
+  }
+  .sidebar.closed {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
   }
   .sidebar-title {
     font-family: 'Space Grotesk', sans-serif;
@@ -158,9 +211,12 @@
 
   /* MAIN */
   .main {
-    flex: 1;
     padding: 32px 40px;
     max-width: 820px;
+    width: min(100%, 820px);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
   }
 
   /* START SCREEN */
@@ -400,6 +456,10 @@
     margin-bottom: 4px;
   }
   .result-cell .rc-l { font-size: 0.75rem; color: var(--muted); }
+  .result-bar-wrapper { background: var(--surface2); border-radius: 999px; height: 12px; overflow: hidden; margin-top: 6px; }
+  .result-bar { height: 100%; border-radius: 999px; }
+  .filter-pill { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); color: var(--text); border-radius: 999px; padding: 8px 12px; cursor: pointer; font-size: 0.82rem; display: inline-flex; align-items: center; transition: all 0.18s; margin-bottom: 8px; }
+  .filter-pill.active { background: var(--accent); border-color: var(--accent); color: white; }
   .verdict {
     padding: 14px 20px;
     border-radius: 10px;
@@ -425,12 +485,32 @@
   }
   .restart-btn:hover { background: #4f52d3; }
 
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main { padding: 20px 16px; }
-    .header { padding: 14px 16px; }
-    .question-card { padding: 20px; }
+  @media (max-width: 1024px) {
+    .main { padding: 24px 20px; }
+    .header { padding: 14px 20px; }
+    .question-card { padding: 24px; }
     .result-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .app { flex-direction: column; }
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 61px;
+      bottom: 0;
+      width: 280px;
+      z-index: 120;
+      transform: translateX(-100%);
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 4px 0 30px rgba(0,0,0,0.3);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar.closed { transform: translateX(-100%); }
+    .main { padding: 18px 16px; }
+    .header { padding: 12px 16px; }
+    .question-card { padding: 18px; }
+    .result-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -441,11 +521,14 @@
   <div class="header-meta">
     <div class="progress-pill" id="headerProgress">Başlamadı</div>
     <div class="score-pill" id="headerScore" style="display:none">Puan: 0</div>
+    <div class="score-pill" id="headerTime" style="display:none">Süre: 00:00</div>
   </div>
 </div>
 
+<button class="sidebar-toggle-handle closed" onclick="toggleSidebar()" id="sidebarToggle">☰ Sorular</button>
+
 <div class="app">
-  <div class="sidebar" id="sidebar">
+  <div class="sidebar closed" id="sidebar">
     <div class="sidebar-title">Sorular</div>
     <div id="sidebarContent"></div>
   </div>
@@ -998,18 +1081,108 @@ let state = {
   phase: 'start',
   current: 0,
   answers: {},
-  score: 0
+  score: 0,
+  startTime: null,
+  elapsed: 0,
+  timerInterval: null,
+  mode: 'exam',
+  timeLimit: null,
+  sidebarOpen: false,
+  resultFilters: { Temel: true, Orta: true, İleri: true, Bilgi: true, Teknik: true, Yorum: true, Case: true },
+  questionOrder: questions.map((_, i) => i)
 };
+
+function formatDuration(ms) {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function prepareQuestions() {
+  questions.forEach(q => {
+    const items = q.opts.map((text, index) => ({ text, isCorrect: index === q.ans }));
+    shuffleArray(items);
+    q.optsShuffled = items.map(item => item.text);
+    q.shuffledAns = items.findIndex(item => item.isCorrect);
+  });
+}
+
+function getRandomIndexes(count, total) {
+  const indexes = [...Array(total).keys()];
+  shuffleArray(indexes);
+  return indexes.slice(0, count);
+}
+
+function getSelectedCustomConfig() {
+  const minutes = parseInt(document.getElementById('customDuration')?.value, 10);
+  const desired = {
+    Temel: parseInt(document.getElementById('customCountTemel')?.value, 10),
+    Orta: parseInt(document.getElementById('customCountOrta')?.value, 10),
+    İleri: parseInt(document.getElementById('customCountIleri')?.value, 10)
+  };
+  const types = {
+    Bilgi: document.getElementById('customTypeBilgi')?.checked,
+    Teknik: document.getElementById('customTypeTeknik')?.checked,
+    Yorum: document.getElementById('customTypeYorum')?.checked,
+    Case: document.getElementById('customTypeCase')?.checked
+  };
+  return {
+    duration: Number.isFinite(minutes) && minutes > 0 ? minutes : 15,
+    counts: {
+      Temel: Number.isFinite(desired.Temel) && desired.Temel >= 0 ? desired.Temel : 3,
+      Orta: Number.isFinite(desired.Orta) && desired.Orta >= 0 ? desired.Orta : 4,
+      İleri: Number.isFinite(desired.İleri) && desired.İleri >= 0 ? desired.İleri : 3
+    },
+    types: Object.keys(types).some(key => types[key]) ? types : { Bilgi: true, Teknik: true, Yorum: true, Case: true }
+  };
+}
+
+function buildCustomQuestionOrder(config) {
+  const selected = [];
+  ['Temel', 'Orta', 'İleri'].forEach(diff => {
+    const candidates = questions
+      .map((q, i) => ({ q, i }))
+      .filter(({ q }) => q.diff === diff && config.types[q.type]);
+    shuffleArray(candidates);
+    const count = Math.min(config.counts[diff], candidates.length);
+    selected.push(...candidates.slice(0, count).map(item => item.i));
+  });
+  if (!selected.length) {
+    return questions.map((_, i) => i);
+  }
+  shuffleArray(selected);
+  return selected;
+}
+
+function getActiveQuestions() {
+  return state.questionOrder.map(index => questions[index]);
+}
 
 function getCatGroups() {
   const groups = { Temel: [], Orta: [], İleri: [] };
-  questions.forEach((q, i) => {
+  getActiveQuestions().forEach((q, i) => {
     groups[q.diff].push({ q, i });
   });
   return groups;
 }
 
 function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('open', state.sidebarOpen);
+  sidebar.classList.toggle('closed', !state.sidebarOpen);
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  if (sidebarToggle) {
+    sidebarToggle.classList.toggle('open', state.sidebarOpen);
+    sidebarToggle.classList.toggle('closed', !state.sidebarOpen);
+  }
   if (state.phase === 'start') { document.getElementById('sidebarContent').innerHTML = ''; return; }
   const groups = getCatGroups();
   const diffLabels = { Temel: 'temel', Orta: 'orta', İleri: 'ileri' };
@@ -1035,12 +1208,31 @@ function renderSidebar() {
 }
 
 function updateHeader() {
-  const total = questions.length;
+  const activeQuestions = getActiveQuestions();
+  const total = activeQuestions.length;
   const answered = Object.keys(state.answers).length;
   const prog = document.getElementById('headerProgress');
   const sc = document.getElementById('headerScore');
-  if (state.phase === 'start') { prog.textContent = 'Başlamadı'; sc.style.display = 'none'; return; }
-  if (state.phase === 'results') { prog.textContent = 'Tamamlandı'; sc.style.display = 'inline'; sc.textContent = `Puan: ${state.score}/${total}`; return; }
+  const timePill = document.getElementById('headerTime');
+  if (state.phase === 'start') {
+    prog.textContent = 'Başlamadı';
+    sc.style.display = 'none';
+    timePill.style.display = 'none';
+    return;
+  }
+  timePill.style.display = 'inline';
+  if (state.timeLimit) {
+    const remaining = Math.max(0, state.timeLimit - state.elapsed);
+    timePill.textContent = `Kalan: ${formatDuration(remaining)}`;
+  } else {
+    timePill.textContent = `Süre: ${formatDuration(state.elapsed)}`;
+  }
+  if (state.phase === 'results') {
+    prog.textContent = 'Tamamlandı';
+    sc.style.display = 'inline';
+    sc.textContent = `Puan: ${state.score}/${total}`;
+    return;
+  }
   prog.textContent = `${answered}/${total} cevaplandı`;
   sc.style.display = 'inline';
   sc.textContent = `Doğru: ${state.score}`;
@@ -1070,7 +1262,54 @@ function render() {
           <span style="color:var(--warn)">🟡 Orta (11–40)</span>
           <span style="color:var(--danger)">🔴 İleri (41–60)</span>
         </div>
-        <button class="start-btn" onclick="startQuiz()">Sınava Başla →</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;width:100%;max-width:540px;margin-top:18px">
+          <button class="start-btn" onclick="startQuiz()">Sınava Başla →</button>
+          <button class="start-btn" style="background:var(--accent2);border-color:rgba(34,211,238,0.55)" onclick="startQuiz('flash')">Hızlı Kart Sınavı</button>
+        </div>
+        <div style="width:100%;max-width:780px;text-align:left;margin-top:28px;padding:20px;border:1px solid rgba(99,102,241,0.15);border-radius:16px;background:rgba(55,59,100,0.16)">
+          <div style="font-weight:700;margin-bottom:12px;color:var(--text)">Özel Sınav Oluştur</div>
+          <div style="display:grid;gap:14px">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <label for="customDuration" style="font-size:0.9rem;color:var(--muted)">Süre (dk):</label>
+              <input id="customDuration" type="number" value="15" min="1" max="120" style="width:80px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text)">
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text)"><input id="customTypeBilgi" type="checkbox" checked> Bilgi</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text)"><input id="customTypeTeknik" type="checkbox" checked> Teknik</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text)"><input id="customTypeYorum" type="checkbox" checked> Yorum</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text)"><input id="customTypeCase" type="checkbox" checked> Case</label>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:0.9rem;color:var(--text)"><span>Temel</span><input id="customCountTemel" type="number" value="3" min="0" max="20" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text)"></div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:0.9rem;color:var(--text)"><span>Orta</span><input id="customCountOrta" type="number" value="4" min="0" max="30" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text)"></div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:0.9rem;color:var(--text)"><span>İleri</span><input id="customCountIleri" type="number" value="3" min="0" max="30" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text)"></div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+              <button class="start-btn" style="width:100%;max-width:240px" onclick="startQuiz('custom')">Özel Sınav Başlat</button>
+            </div>
+          </div>
+        </div>
+        <div style="width:100%;max-width:780px;text-align:left;margin-top:28px">
+          <div style="font-weight:700;margin-bottom:12px;color:var(--text)">Hızlı Kart Örnekleri</div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+            <div class="stat-card" style="text-align:left;padding:16px 18px;min-height:110px">
+              <div style="font-weight:700;margin-bottom:6px">AS-IS Analizi</div>
+              <div style="font-size:0.8rem;color:var(--muted)">Mevcut durumu belgeleyip süreç iyileştirmeye hazırlar.</div>
+            </div>
+            <div class="stat-card" style="text-align:left;padding:16px 18px;min-height:110px">
+              <div style="font-weight:700;margin-bottom:6px">SMART Kriterleri</div>
+              <div style="font-size:0.8rem;color:var(--muted)">Gereksinimleri ölçülebilir ve izlenebilir yapar.</div>
+            </div>
+            <div class="stat-card" style="text-align:left;padding:16px 18px;min-height:110px">
+              <div style="font-weight:700;margin-bottom:6px">Sprint Backlog</div>
+              <div style="font-size:0.8rem;color:var(--muted)">Sprint için seçilen işleri ve hedefleri içerir.</div>
+            </div>
+            <div class="stat-card" style="text-align:left;padding:16px 18px;min-height:110px">
+              <div style="font-weight:700;margin-bottom:6px">NULL Değeri</div>
+              <div style="font-size:0.8rem;color:var(--muted)">Verinin bilinmeyen veya mevcut olmadığını gösterir.</div>
+            </div>
+          </div>
+        </div>
       </div>`;
     return;
   }
@@ -1084,7 +1323,8 @@ function render() {
 }
 
 function renderQuestion(main) {
-  const q = questions[state.current];
+  const activeQuestions = getActiveQuestions();
+  const q = activeQuestions[state.current];
   const answered = state.answers[q.id];
   const letters = ['A', 'B', 'C', 'D'];
 
@@ -1093,10 +1333,10 @@ function renderQuestion(main) {
     caseHtml = `<div class="case-box"><strong>Senaryo:</strong> ${q.case}</div>`;
   }
 
-  let optionsHtml = q.opts.map((opt, i) => {
+  let optionsHtml = q.optsShuffled.map((opt, i) => {
     let cls = 'option-btn';
     if (answered !== undefined) {
-      if (i === q.ans) cls += ' reveal-correct';
+      if (i === q.shuffledAns) cls += ' reveal-correct';
       else if (i === answered.selected) cls += ' selected-wrong';
     }
     return `<button class="${cls}" ${answered !== undefined ? 'disabled' : ''} onclick="selectAnswer(${i})">
@@ -1107,18 +1347,20 @@ function renderQuestion(main) {
 
   let feedbackHtml = '';
   if (answered !== undefined) {
+    const correctLetter = letters[q.shuffledAns];
+    const correctOpt = q.optsShuffled[q.shuffledAns];
     const fb = answered.correct
       ? `<span class="fb-label">✅ Doğru!</span><span class="fb-exp">${q.exp}</span>`
-      : `<span class="fb-label">❌ Yanlış. Doğru cevap: ${letters[q.ans]} — ${q.opts[q.ans]}</span><span class="fb-exp">${q.exp}</span>`;
+      : `<span class="fb-label">❌ Yanlış. Doğru cevap: ${correctLetter} — ${correctOpt}</span><span class="fb-exp">${q.exp}</span>`;
     feedbackHtml = `<div class="feedback-box ${answered.correct ? 'correct' : 'wrong'}" style="display:block">${fb}</div>`;
   }
 
-  const isLast = state.current === questions.length - 1;
+  const isLast = state.current === activeQuestions.length - 1;
 
   main.innerHTML = `
     <div class="question-card">
       <div class="q-meta">
-        <span class="q-index">Soru ${state.current + 1} / ${questions.length}</span>
+        <span class="q-index">Soru ${state.current + 1} / ${activeQuestions.length}</span>
         <span class="difficulty-badge ${q.diff}">${q.diff}</span>
         <span class="cat-badge">${q.cat}</span>
         <span class="type-badge">${q.type}</span>
@@ -1130,25 +1372,28 @@ function renderQuestion(main) {
     </div>
     <div class="q-nav">
       <button class="nav-btn" onclick="navigate(-1)" ${state.current === 0 ? 'disabled' : ''}>← Önceki</button>
-      <span style="font-size:0.8rem;color:var(--muted)">${Object.keys(state.answers).length} / ${questions.length} cevaplandı</span>
+      <span style="font-size:0.8rem;color:var(--muted)">${Object.keys(state.answers).length} / ${activeQuestions.length} cevaplandı</span>
       ${isLast && answered !== undefined
         ? `<button class="nav-btn primary" onclick="showResults()">Sonuçları Gör →</button>`
         : `<button class="nav-btn" onclick="navigate(1)" ${answered === undefined && !isLast ? 'disabled' : isLast ? 'disabled' : ''}>Sonraki →</button>`
       }
+      <button class="nav-btn" style="background:var(--danger);border-color:var(--danger);color:white" onclick="exitQuiz()">Sınavdan Çık</button>
     </div>`;
 }
 
 function selectAnswer(idx) {
-  const q = questions[state.current];
+  const activeQuestions = getActiveQuestions();
+  const q = activeQuestions[state.current];
   if (state.answers[q.id] !== undefined) return;
-  const correct = idx === q.ans;
+  const correct = idx === q.shuffledAns;
   state.answers[q.id] = { selected: idx, correct };
   if (correct) state.score++;
   render();
 }
 
 function navigate(dir) {
-  state.current = Math.max(0, Math.min(questions.length - 1, state.current + dir));
+  const activeQuestions = getActiveQuestions();
+  state.current = Math.max(0, Math.min(activeQuestions.length - 1, state.current + dir));
   render();
 }
 
@@ -1157,18 +1402,96 @@ function goTo(i) {
   render();
 }
 
-function startQuiz() {
+function startTimer() {
+  clearTimer();
+  state.startTime = Date.now();
+  state.timerInterval = setInterval(() => {
+    state.elapsed = Date.now() - state.startTime;
+    if (state.timeLimit && state.elapsed >= state.timeLimit) {
+      state.elapsed = state.timeLimit;
+      updateHeader();
+      showResults();
+      return;
+    }
+    updateHeader();
+  }, 1000);
+}
+
+function clearTimer() {
+  if (state.timerInterval) {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+}
+
+function toggleSidebar() {
+  state.sidebarOpen = !state.sidebarOpen;
+  render();
+}
+
+function toggleResultFilter(name) {
+  state.resultFilters[name] = !state.resultFilters[name];
+  render();
+}
+
+function exitQuiz() {
+  clearTimer();
+  state = {
+    phase: 'start',
+    current: 0,
+    answers: {},
+    score: 0,
+    startTime: null,
+    elapsed: 0,
+    timerInterval: null,
+    mode: 'exam',
+    timeLimit: null,
+    sidebarOpen: false,
+    resultFilters: { Temel: true, Orta: true, İleri: true, Bilgi: true, Teknik: true, Yorum: true, Case: true },
+    questionOrder: questions.map((_, i) => i)
+  };
+  render();
+}
+
+function startQuiz(mode = 'exam') {
   state.phase = 'quiz';
+  state.mode = mode;
+  state.current = 0;
+  state.answers = {};
+  state.score = 0;
+  state.elapsed = 0;
+  if (mode === 'custom') {
+    const config = getSelectedCustomConfig();
+    state.questionOrder = buildCustomQuestionOrder(config);
+    state.timeLimit = config.duration * 60 * 1000;
+  } else if (mode === 'flash') {
+    state.questionOrder = getRandomIndexes(10, questions.length);
+    state.timeLimit = null;
+  } else {
+    state.questionOrder = questions.map((_, i) => i);
+    state.timeLimit = null;
+  }
+  state.sidebarOpen = false;
+  state.resultFilters = { Temel: true, Orta: true, İleri: true, Bilgi: true, Teknik: true, Yorum: true, Case: true };
+  prepareQuestions();
+  startTimer();
   render();
 }
 
 function showResults() {
   state.phase = 'results';
+  const elapsed = Date.now() - state.startTime;
+  state.elapsed = state.timeLimit ? Math.min(elapsed, state.timeLimit) : elapsed;
+  clearTimer();
   render();
 }
 
 function renderResults(main) {
-  const total = questions.length;
+  const activeQuestions = getActiveQuestions();
+  const total = activeQuestions.length;
+  const answeredCount = Object.keys(state.answers).length;
+  const wrongCount = answeredCount - state.score;
+  const unansweredCount = total - answeredCount;
   const pct = Math.round((state.score / total) * 100);
   let verdict, vclass;
   if (pct >= 80) { verdict = '🏆 Mükemmel! Mülakat için hazırsınız.'; vclass = 'great'; }
@@ -1176,14 +1499,66 @@ function renderResults(main) {
   else { verdict = '📚 Temel konuları pekiştirin ve tekrar deneyin.'; vclass = 'low'; }
 
   const byDiff = { Temel: { c: 0, t: 0 }, Orta: { c: 0, t: 0 }, İleri: { c: 0, t: 0 } };
-  questions.forEach(q => {
+  const byType = { Bilgi: { c: 0, t: 0 }, Teknik: { c: 0, t: 0 }, Yorum: { c: 0, t: 0 }, Case: { c: 0, t: 0 } };
+  const missed = [];
+
+  activeQuestions.forEach(q => {
+    const answered = state.answers[q.id];
+    const correct = answered?.correct ?? false;
     byDiff[q.diff].t++;
-    if (state.answers[q.id]?.correct) byDiff[q.diff].c++;
+    byType[q.type].t++;
+    if (correct) {
+      byDiff[q.diff].c++;
+      byType[q.type].c++;
+    } else {
+      missed.push({ q, status: answered ? 'Yanlış' : 'Boş' });
+    }
   });
+
+  const typeStats = Object.entries(byType).map(([type, data]) => ({
+    label: type,
+    correct: data.c,
+    total: data.t,
+    pct: data.t ? Math.round((data.c / data.t) * 100) : 0,
+    color: 'var(--accent2)'
+  }));
+
+  const diffStats = Object.entries(byDiff).map(([diff, data]) => ({
+    label: diff,
+    correct: data.c,
+    total: data.t,
+    pct: data.t ? Math.round((data.c / data.t) * 100) : 0,
+    color: diff === 'Temel' ? 'var(--easy)' : diff === 'Orta' ? 'var(--warn)' : 'var(--danger)'
+  }));
+
+  const displayStats = [...diffStats, ...typeStats];
+
+  const priorities = displayStats
+    .filter(item => item.total > 0)
+    .sort((a, b) => a.pct - b.pct)
+    .slice(0, 3)
+    .map(item => `${item.label} (${item.pct}% doğru)`);
+
+  const recommendation = priorities.length > 0
+    ? `İlk olarak düşük başarı oranı olan alanlara odaklan: ${priorities.join(', ')}.`
+    : 'Güzel! Tüm sorularda dengeli bir başarı gösteriyorsunuz.';
+
+  const filterKeys = displayStats.map(item => item.label);
+  const filterHtml = filterKeys.map(name => `
+      <button class="filter-pill ${state.resultFilters[name] ? 'active' : ''}" onclick="toggleResultFilter('${name}')">${name}</button>
+    `).join('');
+
+  const filteredMissed = missed.filter(item => state.resultFilters[item.q.diff] && state.resultFilters[item.q.type]);
+  const missedHtml = filteredMissed.slice(0, 6).map(item => {
+    return `<li><strong>${item.status}</strong> - [${item.q.diff}/${item.q.type}] ${item.q.q}</li>`;
+  }).join('');
+
+  const endedByTime = state.timeLimit && state.elapsed >= state.timeLimit;
 
   main.innerHTML = `
     <div class="results-screen">
       <h2>Sonuçların Hazır!</h2>
+      ${endedByTime ? '<div class="verdict low">⏱ Süre doldu. Eksik kalan sorular, sonuçlara yanlış olarak eklendi.</div>' : ''}
       <div class="big-score">${pct}%</div>
       <div class="score-label">${state.score} / ${total} doğru</div>
       <div class="result-grid">
@@ -1191,15 +1566,61 @@ function renderResults(main) {
         <div class="result-cell"><div class="rc-n" style="color:var(--warn)">${byDiff['Orta'].c}/${byDiff['Orta'].t}</div><div class="rc-l">🟡 Orta</div></div>
         <div class="result-cell"><div class="rc-n" style="color:var(--danger)">${byDiff['İleri'].c}/${byDiff['İleri'].t}</div><div class="rc-l">🔴 İleri</div></div>
       </div>
+      <div style="margin-top:18px;text-align:left">
+        <div style="font-weight:700;margin-bottom:12px">Performans Grafiği</div>
+        <div style="display:grid;gap:14px">
+          ${displayStats.map(stat => `
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:0.88rem;color:var(--muted);margin-bottom:6px">
+                <span>${stat.label}</span><span>${stat.pct}%</span>
+              </div>
+              <div class="result-bar-wrapper"><div class="result-bar" style="width:${stat.pct}%;background:${stat.color}"></div></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
       <div class="verdict ${vclass}">${verdict}</div>
-      <button class="restart-btn" onclick="restart()">Tekrar Dene</button>
+      <div style="margin-top:14px;color:var(--text);line-height:1.65">${recommendation}</div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px">
+        <div class="result-cell"><div class="rc-n">${answeredCount}</div><div class="rc-l">Cevaplanan</div></div>
+        <div class="result-cell"><div class="rc-n" style="color:var(--danger)">${wrongCount + unansweredCount}</div><div class="rc-l">Yanlış/Boş</div></div>
+        <div class="result-cell"><div class="rc-n">${formatDuration(state.elapsed)}</div><div class="rc-l">Geçen Süre</div></div>
+      </div>
+      <div style="margin-top:22px;text-align:left">
+        <div style="font-weight:700;margin-bottom:10px">Daha Fazla Çalış</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">${filterHtml}</div>
+        <div style="font-size:0.9rem;color:var(--muted);margin-bottom:12px">Seçili alanlarda yanlış/boş sorular listeleniyor.</div>
+        <ul style="padding-left:18px;color:var(--muted);font-size:0.9rem;line-height:1.6">${missedHtml || '<li>Tebrikler! Filtrelenen alanda yanlış ya da boş soru bulunamadı.</li>'}</ul>
+      </div>
+      <button class="restart-btn" onclick="exitQuiz()">Ana ekrana dön</button>
     </div>`;
 }
 
 function restart() {
-  state = { phase: 'start', current: 0, answers: {}, score: 0 };
+  clearTimer();
+  state = {
+    phase: 'start',
+    current: 0,
+    answers: {},
+    score: 0,
+    startTime: null,
+    elapsed: 0,
+    timerInterval: null,
+    mode: 'exam',
+    timeLimit: null,
+    sidebarOpen: false,
+    resultFilters: { Temel: true, Orta: true, İleri: true, Bilgi: true, Teknik: true, Yorum: true, Case: true },
+    questionOrder: questions.map((_, i) => i)
+  };
   render();
 }
+
+window.addEventListener('resize', () => {
+  if (state.sidebarOpen) {
+    state.sidebarOpen = false;
+    renderSidebar();
+  }
+});
 
 render();
 </script>
